@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stefano Caldirola — Quantitative Analyst</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── CSS VARIABLES ──────────────────────────────────────────────────────── */
+    :root {
+      --bg:        #0c0d10;
+      --bg2:       #13151a;
+      --bg3:       #1a1d24;
+      --border:    rgba(255,255,255,0.07);
+      --gold:      #c9a84c;
+      --gold-dim:  rgba(201,168,76,0.15);
+      --gold-glow: rgba(201,168,76,0.35);
+      --text:      #e8e4dc;
+      --text-dim:  rgba(232,228,220,0.55);
+      --text-mute: rgba(232,228,220,0.28);
+      --red-soft:  #b94a3a;
+      --mono:      'JetBrains Mono', monospace;
+      --serif:     'Cormorant Garamond', serif;
+      --sans:      'Outfit', sans-serif;
+    }
+
+    /* ─── RESET & BASE ───────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    ::selection { background: var(--gold-dim); color: var(--gold); }
+
+    /* ─── SCROLLBAR ──────────────────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+    /* ─── HERO CANVAS BACKGROUND ─────────────────────────────────────────────── */
+    #hero-canvas {
+      position: absolute; inset: 0;
+      pointer-events: none; opacity: 0.45;
+    }
+
+    /* ─── NAV ────────────────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: rgba(12,13,16,0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color .25s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ─── HERO ───────────────────────────────────────────────────────────────── */
+    #hero {
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 8rem 10vw 5rem;
+      overflow: hidden;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.4rem;
+      opacity: 0; animation: fadeUp .8s .3s forwards;
+    }
+    .hero-name {
+      font-family: var(--serif);
+      font-size: clamp(3.5rem, 9vw, 7.5rem);
+      font-weight: 300;
+      line-height: 1.02;
+      letter-spacing: -0.01em;
+      opacity: 0; animation: fadeUp .9s .5s forwards;
+    }
+    .hero-name em { font-style: italic; color: var(--gold); }
+    .hero-tagline {
+      margin-top: 1.8rem;
+      max-width: 560px;
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+      opacity: 0; animation: fadeUp .9s .7s forwards;
+    }
+    .hero-meta {
+      margin-top: 2.6rem;
+      display: flex; gap: 2rem; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp .9s .9s forwards;
+    }
+    .hero-contact {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--text-mute);
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none; transition: color .2s;
+    }
+    .hero-contact:hover { color: var(--gold); }
+    .hero-contact span { color: var(--gold); font-size: 0.85rem; }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: .15em; text-transform: uppercase; color: var(--text-mute);
+      animation: pulse 2.5s infinite;
+    }
+    .hero-scroll::after {
+      content: ''; width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+    }
+    .hero-divider {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+    }
+
+    /* ─── SECTIONS ───────────────────────────────────────────────────────────── */
+    section { padding: 6rem 10vw; }
+    section + section { border-top: 1px solid var(--border); }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(to right, var(--gold-dim), transparent);
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 3.5rem;
+    }
+
+    /* ─── PROFILE ────────────────────────────────────────────────────────────── */
+    #profile .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .profile-text { font-size: 1.05rem; color: var(--text-dim); line-height: 1.85; }
+    .profile-text strong { color: var(--text); font-weight: 500; }
+    .profile-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    }
+    .stat-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 1.6rem;
+      position: relative; overflow: hidden;
+      transition: border-color .3s, transform .3s;
+    }
+    .stat-card:hover {
+      border-color: rgba(201,168,76,0.35);
+      transform: translateY(-3px);
+    }
+    .stat-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(to right, var(--gold), transparent);
+    }
+    .stat-number {
+      font-family: var(--serif);
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+      margin-top: 0.5rem;
+    }
+
+    /* ─── TIMELINE ───────────────────────────────────────────────────────────── */
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: ''; position: absolute;
+      left: 0; top: 0.5rem; bottom: 0; width: 1px;
+      background: linear-gradient(to bottom, var(--gold), var(--gold-dim), transparent);
+    }
+    .tl-item {
+      position: relative; margin-bottom: 3.5rem;
+      opacity: 1; transform: translateX(0);
+      transition: opacity .6s, transform .6s;
+    }
+    .tl-item.animate-in {
+      opacity: 0; transform: translateX(-20px);
+    }
+    .tl-item.animate-in.visible { opacity: 1; transform: translateX(0); }
+    .tl-dot {
+      position: absolute; left: -2.45rem; top: 0.35rem;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 12px var(--gold-glow);
+    }
+    .tl-period {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+    .tl-role {
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+    .tl-company {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin: 0.25rem 0 0.9rem;
+    }
+    .tl-desc {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      max-width: 680px;
+    }
+    .tl-bullets { margin-top: 0.8rem; list-style: none; }
+    .tl-bullets li {
+      font-size: 0.875rem;
+      color: var(--text-mute);
+      padding: 0.25rem 0 0.25rem 1.2rem;
+      position: relative; line-height: 1.6;
+    }
+    .tl-bullets li::before {
+      content: '→'; position: absolute; left: 0;
+      color: var(--gold); font-size: 0.75rem;
+    }
+
+    /* ─── SKILLS ─────────────────────────────────────────────────────────────── */
+    #skills .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    .skill-group { }
+    .skill-group-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .skill-item { margin-bottom: 1rem; }
+    .skill-name {
+      display: flex; justify-content: space-between;
+      font-size: 0.82rem; margin-bottom: 0.4rem;
+      color: var(--text-dim);
+    }
+    .skill-bar {
+      height: 2px; background: var(--bg3); border-radius: 1px; overflow: hidden;
+    }
+    .skill-fill {
+      height: 100%; border-radius: 1px;
+      background: linear-gradient(to right, var(--gold), rgba(201,168,76,0.6));
+      width: 0; transition: width 1.2s cubic-bezier(.22,1,.36,1);
+    }
+
+    /* ─── EDUCATION ──────────────────────────────────────────────────────────── */
+    #education .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .edu-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 1.8rem;
+      position: relative; overflow: hidden;
+      transition: border-color .3s, transform .3s;
+    }
+    .edu-card:hover {
+      border-color: rgba(201,168,76,0.3);
+      transform: translateY(-4px);
+    }
+    .edu-card::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+    }
+    .edu-degree {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      margin-bottom: 0.4rem;
+    }
+    .edu-field {
+      font-size: 0.82rem;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+    .edu-uni {
+      font-size: 0.8rem;
+      color: var(--text-mute);
+      line-height: 1.5;
+    }
+    .edu-years {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-mute);
+      margin-top: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────────────────── */
+    footer {
+      padding: 3rem 10vw;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1.5rem;
+    }
+    .footer-sig {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      color: var(--text-mute);
+    }
+    .footer-sig em { color: var(--gold); font-style: italic; }
+    .footer-mono {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--text-mute);
+    }
+
+    /* ─── ANIMATIONS ─────────────────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 1; }
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      #hero { padding: 7rem 6vw 4rem; }
+      section { padding: 4rem 6vw; }
+      #profile .profile-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      #skills .skills-grid { grid-template-columns: 1fr 1fr; }
+      #education .edu-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 560px) {
+      #skills .skills-grid { grid-template-columns: 1fr; }
+      .profile-stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVIGATION ── -->
+  <nav>
+    <a href="#hero" class="nav-logo">S. Caldirola</a>
+    <ul class="nav-links">
+      <li><a href="#profile">Profile</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#education">Education</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-eyebrow">Quantitative Analyst · Risk Specialist · PhD Physics</div>
+    <h1 class="hero-name">Stefano<br /><em>Caldirola</em></h1>
+    <p class="hero-tagline">
+      Bridging deep quantitative expertise with hands-on technical fluency
+      <span style="color:var(--gold);margin:0 0.4em;">·</span>
+      credit risk specialist with experience in modelling, coding and turning complex financial problems into rigorous, actionable solutions
+      <span style="color:var(--gold);margin:0 0.4em;">·</span>
+      communicating them through clear data visualisation and storytelling.
+    </p>
+    <div class="hero-meta">
+      <a href="https://www.linkedin.com/in/stefano-caldirola/" target="_blank" rel="noopener" class="hero-contact">
+        <span>in</span> linkedin.com/in/stefano-caldirola
+      </a>
+    </div>
+    <div class="hero-scroll">scroll</div>
+    <div class="hero-divider"></div>
+  </section>
+
+  <!-- ── PROFILE ── -->
+  <section id="profile">
+    <div class="section-label">01 — Professional Profile</div>
+    <h2 class="section-title">Quantitative expertise,<br /><em style="font-family:var(--serif);font-style:italic;">end to end</em></h2>
+    <div class="profile-grid">
+      <div class="profile-text">
+        <p>
+          The <em style="color:var(--gold)">fil rouge</em> connecting my career is <strong>Financial Risk</strong> —
+          encompassing all processes needed to design, develop and evaluate effective credit strategies.
+          My competitive edge lies in the synergy between a <strong>rigorous quantitative background</strong>
+          (PhD in Experimental Physics) and advanced coding proficiency across multiple languages and architectures.
+          I also bring a strong focus on <strong>data presentation</strong> — translating model outputs and risk metrics
+          into clear dashboards, visual narratives and executive-ready reports that make complexity accessible.
+        </p>
+        <br />
+        <p style="color:var(--text-mute);font-size:.9rem;">
+          Italian · Fluent English (C1) · Daily international working environment
+        </p>
+      </div>
+      <div class="profile-stats">
+        <div class="stat-card">
+          <div class="stat-number">10+</div>
+          <div class="stat-label">Years in Finance &amp; Risk in Major Banking Groups</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">PhD</div>
+          <div class="stat-label">Experimental Physics</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">8+</div>
+          <div class="stat-label">Programming Languages &amp; Technical Tools</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">360°</div>
+          <div class="stat-label">From Model Design to Production Delivery</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── EXPERIENCE ── -->
+  <section id="experience">
+    <div class="section-label">02 — Work Experience</div>
+    <h2 class="section-title">Career<br /><em style="font-family:var(--serif);font-style:italic;">timeline</em></h2>
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-period">04/2023 — Present</div>
+        <div class="tl-role">Quantitative Analyst</div>
+        <div class="tl-company">UniCredit · Group Risk Management</div>
+        <div class="tl-desc">
+          Risk Models Specialist for the Credit Risk Modelling team — designing and developing credit
+          risk models for Pillar I risks (Credit Risk, IFRS9, Stress Testing) and maintaining the
+          related architectural framework.
+        </div>
+        <ul class="tl-bullets">
+          <li>IFRS9 model development &amp; integration; LLP simulations and impact analyses</li>
+          <li>Governance, monitoring and Data Quality of the IFRS9 calculation process</li>
+          <li>Support to Group Legal Entities on Group Wide models</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-period">04/2021 — 04/2023</div>
+        <div class="tl-role">Solution Architect</div>
+        <div class="tl-company">UniCredit Services · Credit Risk &amp; Lending Office ICT</div>
+        <div class="tl-desc">
+          Providing and evolving calculation engines for credit risk parameters and solutions
+          for UniCredit's digital channels within the Credit Risk &amp; Lending Office product line.
+        </div>
+        <ul class="tl-bullets">
+          <li>Full IT Project LifeCycle ownership from kickoff to production go-live</li>
+          <li>Design and delivery of high-performance scalable applications in complex environments</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-period">04/2020 — 04/2021</div>
+        <div class="tl-role">Risk Manager</div>
+        <div class="tl-company">Société Générale Equipment Finance · Risk Management</div>
+        <div class="tl-desc">
+          Risk Manager for the Italian Legal Entities: SG Equipment Finance, SG Factoring,
+          SG Leasing, Fraer Leasing — internal and group risk committee reporting.
+        </div>
+        <ul class="tl-bullets">
+          <li>Data analysis and reporting for internal and group risk committees</li>
+          <li>Regulatory framework compliance, internal and external control structures</li>
+          <li>KRI assessment &amp; identification, ICAAP package preparation</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-period">11/2018 — 03/2020</div>
+        <div class="tl-role">Risk Quant</div>
+        <div class="tl-company">UniCredit · Group Risk Management</div>
+        <div class="tl-desc">
+          Quantitative Analyst for the CPM and EC Models team — design, development and governance
+          of portfolio credit risk models across the entire UniCredit Group.
+        </div>
+        <ul class="tl-bullets">
+          <li>Portfolio model development, internal audit and ECB deep-dive engagement</li>
+          <li>Internal reporting, target definition and ad-hoc analyses for GRM area</li>
+          <li>Steering ICT projects related to Credit Portfolio Models</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-period">12/2015 — 10/2018</div>
+        <div class="tl-role">Application Manager</div>
+        <div class="tl-company">UniCredit Business Integrated Solutions · Credit Risk ICT</div>
+        <div class="tl-desc">
+          Responsible for ICT solutions supporting centralized calculation and monitoring of
+          key Credit Risk indicators in line with local and international regulations.
+        </div>
+        <ul class="tl-bullets">
+          <li>High-performance scalable application design for the Risk Management area</li>
+          <li>IT Project LifeCycle management as interface between business and dev teams</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot" style="background:rgba(201,168,76,0.4);box-shadow:none;"></div>
+        <div class="tl-period">09/2014 — 09/2015</div>
+        <div class="tl-role">Assistant Professor</div>
+        <div class="tl-company">Università degli Studi di Milano-Bicocca</div>
+        <div class="tl-desc">
+          Teaching and laboratory assistance for the undergraduate course:
+          <em>Physics Laboratory I</em>.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── SKILLS ── -->
+  <section id="skills">
+    <div class="section-label">03 — Skills &amp; Expertise</div>
+    <h2 class="section-title">Technical<br /><em style="font-family:var(--serif);font-style:italic;">toolkit</em></h2>
+    <div class="skills-grid">
+
+      <div class="skill-group">
+        <div class="skill-group-label">Finance &amp; Risk</div>
+        <div class="skill-item">
+          <div class="skill-name"><span>IFRS9 / Credit Risk Models</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="96"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>IRB / Pillar II Models</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="94"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Stress Testing</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Monte Carlo Methods</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-label">Programming Languages</div>
+        <div class="skill-item">
+          <div class="skill-name"><span>SAS / Python</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="92"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>R / Power BI</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Java / C++</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>SQL</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-label">Strengths &amp; Soft Skills</div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Model Dev — prototype to production</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="93"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Analytical Thinking &amp; Problem Solving</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="96"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Regulatory Compliance (Audit · GIV · ECB)</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name"><span>Effective Communication &amp; Data Presentation</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── EDUCATION ── -->
+  <section id="education">
+    <div class="section-label">04 — Education</div>
+    <h2 class="section-title">Academic<br /><em style="font-family:var(--serif);font-style:italic;">foundations</em></h2>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="edu-degree">Doctor of Philosophy</div>
+        <div class="edu-field">Experimental Physics · Research &amp; Data Analysis</div>
+        <div class="edu-uni">Università degli Studi di Milano-Bicocca</div>
+        <div class="edu-years">2012 — 2015</div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-degree">Master's Degree</div>
+        <div class="edu-field">Physics · Plasma &amp; Solid State Physics</div>
+        <div class="edu-uni">Università degli Studi di Milano-Bicocca</div>
+        <div class="edu-years">2010 — 2012</div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-degree">Bachelor's Degree</div>
+        <div class="edu-field">Physics · Mathematics &amp; Statistics</div>
+        <div class="edu-uni">Università degli Studi di Milano-Bicocca</div>
+        <div class="edu-years">2007 — 2010</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-sig">Stefano <em>Caldirola</em> &mdash; 2026</div>
+    <div class="footer-mono"><a href="https://www.linkedin.com/in/stefano-caldirola/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">linkedin.com/in/stefano-caldirola</a></div>
+  </footer>
+
+  <!-- ── SCRIPTS ── -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ── Hero canvas: animated grid lines ──
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let t = 0;
+
+    function resize() {
+      canvas.width  = canvas.parentElement.offsetWidth;
+      canvas.height = canvas.parentElement.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function drawGrid() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const spacing = 60;
+      const cols = Math.ceil(canvas.width  / spacing) + 1;
+      const rows = Math.ceil(canvas.height / spacing) + 1;
+
+      for (let i = 0; i < cols; i++) {
+        const x = i * spacing;
+        const wave = Math.sin(t * 0.6 + i * 0.3) * 3;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x + wave, canvas.height);
+        ctx.strokeStyle = `rgba(201,168,76,${0.04 + Math.sin(t*0.4 + i*0.5)*0.015})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+      for (let j = 0; j < rows; j++) {
+        const y = j * spacing;
+        const wave = Math.sin(t * 0.5 + j * 0.25) * 3;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y + wave);
+        ctx.strokeStyle = `rgba(201,168,76,${0.03 + Math.cos(t*0.3 + j*0.4)*0.012})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+
+      // Floating dots at intersections
+      for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+          if ((i + j) % 4 !== 0) continue;
+          const glow = (Math.sin(t * 0.8 + i * 0.7 + j * 0.5) + 1) / 2;
+          ctx.beginPath();
+          ctx.arc(i * spacing, j * spacing, 1.2, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(201,168,76,${0.05 + glow * 0.18})`;
+          ctx.fill();
+        }
+      }
+
+      t += 0.012;
+      requestAnimationFrame(drawGrid);
+    }
+    drawGrid();
+
+    // ── Intersection Observer: timeline items ──
+    const tlItems = document.querySelectorAll('.tl-item');
+    // Only animate if IntersectionObserver is supported and items are off-screen
+    if ('IntersectionObserver' in window) {
+      tlItems.forEach(el => el.classList.add('animate-in'));
+      const tlObserver = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 80);
+            tlObserver.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.05 });
+      tlItems.forEach(el => tlObserver.observe(el));
+    }
+
+    // ── Intersection Observer:
