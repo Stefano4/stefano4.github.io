@@ -1,749 +1,912 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stefano Caldirola — Quantitative Analyst</title>
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trains — A Field Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=Syne:wght@400;700;800&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
   <style>
-    /* ─── CSS VARIABLES ──────────────────────────────────────────────────────── */
-    :root {
-      --bg:        #0c0d10;
-      --bg2:       #13151a;
-      --bg3:       #1a1d24;
-      --border:    rgba(255,255,255,0.07);
-      --gold:      #c9a84c;
-      --gold-dim:  rgba(201,168,76,0.15);
-      --gold-glow: rgba(201,168,76,0.35);
-      --text:      #e8e4dc;
-      --text-dim:  rgba(232,228,220,0.55);
-      --text-mute: rgba(232,228,220,0.28);
-      --red-soft:  #b94a3a;
-      --mono:      'JetBrains Mono', monospace;
-      --serif:     'Cormorant Garamond', serif;
-      --sans:      'Outfit', sans-serif;
-    }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ─── RESET & BASE ───────────────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      font-weight: 300;
-      line-height: 1.65;
-      overflow-x: hidden;
-    }
-    ::selection { background: var(--gold-dim); color: var(--gold); }
+:root {
+  --linen:   #f0ebe0;
+  --paper:   #e8e2d5;
+  --ink:     #1a2332;
+  --ink-mid: #3d4f62;
+  --ink-low: #7a8a98;
+  --teal:    #1d6b72;
+  --teal-mid:#2d8a93;
+  --teal-bg: #e4f0f1;
+  --brick:   #b83d22;
+  --brick-bg:#f5e8e4;
+  --sand:    #c4b99a;
+}
 
-    /* ─── SCROLLBAR ──────────────────────────────────────────────────────────── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+html { scroll-behavior: smooth; }
 
-    /* ─── HERO CANVAS BACKGROUND ─────────────────────────────────────────────── */
-    #hero-canvas {
-      position: absolute; inset: 0;
-      pointer-events: none; opacity: 0.45;
-    }
+body {
+  background: var(--linen);
+  color: var(--ink);
+  font-family: 'Lora', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
 
-    /* ─── NAV ────────────────────────────────────────────────────────────────── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.1rem 3rem;
-      background: rgba(12,13,16,0.88);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-logo {
-      font-family: var(--serif);
-      font-size: 1.25rem;
-      letter-spacing: 0.04em;
-      color: var(--gold);
-      text-decoration: none;
-    }
-    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
-    .nav-links a {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      text-decoration: none;
-      transition: color .25s;
-    }
-    .nav-links a:hover { color: var(--gold); }
+/* ── NAV ── */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 4rem;
+  border-bottom: 1.5px solid var(--ink);
+}
+.wordmark {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+}
+nav { display: flex; gap: 2.5rem; }
+nav a {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+nav a:hover { color: var(--brick); }
 
-    /* ─── HERO ───────────────────────────────────────────────────────────────── */
-    #hero {
-      position: relative; min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 8rem 10vw 5rem;
-      overflow: hidden;
-    }
-    .hero-eyebrow {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.4rem;
-      opacity: 0; animation: fadeUp .8s .3s forwards;
-    }
-    .hero-name {
-      font-family: var(--serif);
-      font-size: clamp(3.5rem, 9vw, 7.5rem);
-      font-weight: 300;
-      line-height: 1.02;
-      letter-spacing: -0.01em;
-      opacity: 0; animation: fadeUp .9s .5s forwards;
-    }
-    .hero-name em { font-style: italic; color: var(--gold); }
-    .hero-tagline {
-      margin-top: 1.8rem;
-      max-width: 560px;
-      font-size: 1.05rem;
-      color: var(--text-dim);
-      line-height: 1.75;
-      opacity: 0; animation: fadeUp .9s .7s forwards;
-    }
-    .hero-meta {
-      margin-top: 2.6rem;
-      display: flex; gap: 2rem; flex-wrap: wrap;
-      opacity: 0; animation: fadeUp .9s .9s forwards;
-    }
-    .hero-contact {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      color: var(--text-mute);
-      display: flex; align-items: center; gap: 0.5rem;
-      text-decoration: none; transition: color .2s;
-    }
-    .hero-contact:hover { color: var(--gold); }
-    .hero-contact span { color: var(--gold); font-size: 0.85rem; }
-    .hero-scroll {
-      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: .5rem;
-      font-family: var(--mono); font-size: 0.62rem;
-      letter-spacing: .15em; text-transform: uppercase; color: var(--text-mute);
-      animation: pulse 2.5s infinite;
-    }
-    .hero-scroll::after {
-      content: ''; width: 1px; height: 40px;
-      background: linear-gradient(to bottom, var(--gold), transparent);
-    }
-    .hero-divider {
-      position: absolute; right: 0; top: 0; bottom: 0; width: 1px;
-      background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
-    }
+/* ── HERO ── */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  min-height: 88vh;
+  border-bottom: 1.5px solid var(--ink);
+}
 
-    /* ─── SECTIONS ───────────────────────────────────────────────────────────── */
-    section { padding: 6rem 10vw; }
-    section + section { border-top: 1px solid var(--border); }
+.hero-left {
+  padding: 5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1.5px solid var(--ink);
+}
 
-    .section-label {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.8rem;
-      display: flex; align-items: center; gap: 1rem;
-    }
-    .section-label::after {
-      content: ''; flex: 1; height: 1px;
-      background: linear-gradient(to right, var(--gold-dim), transparent);
-    }
-    .section-title {
-      font-family: var(--serif);
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 300;
-      line-height: 1.15;
-      margin-bottom: 3.5rem;
-    }
+.hero-overline {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
 
-    /* ─── PROFILE ────────────────────────────────────────────────────────────── */
-    #profile .profile-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: start;
-    }
-    .profile-text { font-size: 1.05rem; color: var(--text-dim); line-height: 1.85; }
-    .profile-text strong { color: var(--text); font-weight: 500; }
-    .profile-stats {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
-    }
-    .stat-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 1.6rem;
-      position: relative; overflow: hidden;
-      transition: border-color .3s, transform .3s;
-    }
-    .stat-card:hover {
-      border-color: rgba(201,168,76,0.35);
-      transform: translateY(-3px);
-    }
-    .stat-card::before {
-      content: ''; position: absolute;
-      top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(to right, var(--gold), transparent);
-    }
-    .stat-number {
-      font-family: var(--serif);
-      font-size: 2.8rem;
-      font-weight: 300;
-      color: var(--gold);
-      line-height: 1;
-    }
-    .stat-label {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-mute);
-      margin-top: 0.5rem;
-    }
+.hero-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(4.5rem, 10vw, 9rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-top: 1.5rem;
+}
 
-    /* ─── TIMELINE ───────────────────────────────────────────────────────────── */
-    .timeline { position: relative; padding-left: 2rem; }
-    .timeline::before {
-      content: ''; position: absolute;
-      left: 0; top: 0.5rem; bottom: 0; width: 1px;
-      background: linear-gradient(to bottom, var(--gold), var(--gold-dim), transparent);
-    }
-    .tl-item {
-      position: relative; margin-bottom: 3.5rem;
-      opacity: 1; transform: translateX(0);
-      transition: opacity .6s, transform .6s;
-    }
-    .tl-item.animate-in {
-      opacity: 0; transform: translateX(-20px);
-    }
-    .tl-item.animate-in.visible { opacity: 1; transform: translateX(0); }
-    .tl-dot {
-      position: absolute; left: -2.45rem; top: 0.35rem;
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 12px var(--gold-glow);
-    }
-    .tl-period {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.1em;
-      color: var(--gold);
-      margin-bottom: 0.4rem;
-    }
-    .tl-role {
-      font-family: var(--serif);
-      font-size: 1.45rem;
-      font-weight: 400;
-      line-height: 1.2;
-    }
-    .tl-company {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      margin: 0.25rem 0 0.9rem;
-    }
-    .tl-desc {
-      font-size: 0.9rem;
-      color: var(--text-dim);
-      line-height: 1.7;
-      max-width: 680px;
-    }
-    .tl-bullets { margin-top: 0.8rem; list-style: none; }
-    .tl-bullets li {
-      font-size: 0.875rem;
-      color: var(--text-mute);
-      padding: 0.25rem 0 0.25rem 1.2rem;
-      position: relative; line-height: 1.6;
-    }
-    .tl-bullets li::before {
-      content: '→'; position: absolute; left: 0;
-      color: var(--gold); font-size: 0.75rem;
-    }
+.hero-title .italic { font-style: italic; color: var(--brick); }
 
-    /* ─── SKILLS ─────────────────────────────────────────────────────────────── */
-    #skills .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-    }
-    .skill-group { }
-    .skill-group-label {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.2rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .skill-item { margin-bottom: 1rem; }
-    .skill-name {
-      display: flex; justify-content: space-between;
-      font-size: 0.82rem; margin-bottom: 0.4rem;
-      color: var(--text-dim);
-    }
-    .skill-bar {
-      height: 2px; background: var(--bg3); border-radius: 1px; overflow: hidden;
-    }
-    .skill-fill {
-      height: 100%; border-radius: 1px;
-      background: linear-gradient(to right, var(--gold), rgba(201,168,76,0.6));
-      width: 0; transition: width 1.2s cubic-bezier(.22,1,.36,1);
-    }
+.hero-bottom {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-end;
+}
 
-    /* ─── EDUCATION ──────────────────────────────────────────────────────────── */
-    #education .edu-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-    .edu-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 1.8rem;
-      position: relative; overflow: hidden;
-      transition: border-color .3s, transform .3s;
-    }
-    .edu-card:hover {
-      border-color: rgba(201,168,76,0.3);
-      transform: translateY(-4px);
-    }
-    .edu-card::after {
-      content: ''; position: absolute;
-      bottom: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
-    }
-    .edu-degree {
-      font-family: var(--serif);
-      font-size: 1.2rem;
-      margin-bottom: 0.4rem;
-    }
-    .edu-field {
-      font-size: 0.82rem;
-      color: var(--gold);
-      margin-bottom: 0.8rem;
-    }
-    .edu-uni {
-      font-size: 0.8rem;
-      color: var(--text-mute);
-      line-height: 1.5;
-    }
-    .edu-years {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--text-mute);
-      margin-top: 1rem;
-      letter-spacing: 0.1em;
-    }
+.hero-byline {
+  font-family: 'Lora', serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--ink-mid);
+  max-width: 380px;
+  line-height: 1.7;
+}
 
-    /* ─── FOOTER ─────────────────────────────────────────────────────────────── */
-    footer {
-      padding: 3rem 10vw;
-      border-top: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 1.5rem;
-    }
-    .footer-sig {
-      font-family: var(--serif);
-      font-size: 1.1rem;
-      color: var(--text-mute);
-    }
-    .footer-sig em { color: var(--gold); font-style: italic; }
-    .footer-mono {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      color: var(--text-mute);
-    }
+.hero-year {
+  font-family: 'Fraunces', serif;
+  font-size: 4rem;
+  font-weight: 300;
+  color: var(--sand);
+  white-space: nowrap;
+}
 
-    /* ─── ANIMATIONS ─────────────────────────────────────────────────────────── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 0.4; }
-      50%       { opacity: 1; }
-    }
+/* Hero right — SVG illustration panel */
+.hero-right {
+  background: var(--teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
 
-    /* ─── RESPONSIVE ─────────────────────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { display: none; }
-      #hero { padding: 7rem 6vw 4rem; }
-      section { padding: 4rem 6vw; }
-      #profile .profile-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      #skills .skills-grid { grid-template-columns: 1fr 1fr; }
-      #education .edu-grid { grid-template-columns: 1fr; }
-      footer { flex-direction: column; align-items: flex-start; }
-    }
-    @media (max-width: 560px) {
-      #skills .skills-grid { grid-template-columns: 1fr; }
-      .profile-stats { grid-template-columns: 1fr; }
-    }
-  </style>
+/* Subtle halftone-ish dot pattern */
+.hero-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* ── INTRO BAND ── */
+.intro-band {
+  display: grid;
+  grid-template-columns: 220px 1fr 1fr;
+  border-bottom: 1.5px solid var(--ink);
+}
+
+.intro-band > * {
+  padding: 3.5rem 3.5rem;
+  border-right: 1.5px solid var(--ink);
+}
+.intro-band > *:last-child { border-right: none; }
+
+.band-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-low);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  align-self: flex-end;
+  padding: 3.5rem 2rem;
+}
+
+.band-text {
+  font-size: 1rem;
+  color: var(--ink-mid);
+  line-height: 1.8;
+}
+.band-text strong { color: var(--ink); font-weight: 600; }
+
+/* ── STAT ROW ── */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1.5px solid var(--ink);
+}
+.stat-cell {
+  padding: 3rem 3.5rem;
+  border-right: 1.5px solid var(--ink);
+}
+.stat-cell:last-child { border-right: none; }
+
+.stat-n {
+  font-family: 'Fraunces', serif;
+  font-size: 3.6rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--ink);
+}
+.stat-n span { font-size: 1.8rem; vertical-align: super; }
+
+.stat-dim {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-top: 0.4rem;
+}
+.stat-desc {
+  font-size: 0.82rem;
+  color: var(--ink-low);
+  margin-top: 0.3rem;
+  font-style: italic;
+}
+
+/* ── SECTION HEADER ── */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 2rem;
+  padding: 4rem 4rem 0;
+}
+.section-number {
+  font-family: 'Fraunces', serif;
+  font-size: 5rem;
+  font-weight: 900;
+  color: var(--paper);
+  line-height: 1;
+  flex-shrink: 0;
+}
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.15;
+}
+.section-rule {
+  flex: 1;
+  height: 1.5px;
+  background: var(--ink);
+  align-self: center;
+}
+
+/* ── HISTORY ── */
+.history-section { border-bottom: 1.5px solid var(--ink); }
+
+.history-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-top: 1.5px solid var(--ink);
+  margin-top: 3rem;
+}
+
+.history-item {
+  padding: 2.5rem 3rem;
+  border-right: 1.5px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+  position: relative;
+  transition: background 0.3s;
+}
+.history-item:nth-child(3n) { border-right: none; }
+.history-item:hover { background: var(--paper); }
+
+.hist-year {
+  font-family: 'Fraunces', serif;
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--brick);
+  line-height: 1;
+}
+.hist-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin: 0.6rem 0 0.5rem;
+}
+.hist-body {
+  font-size: 0.88rem;
+  color: var(--ink-mid);
+  line-height: 1.7;
+}
+
+/* ── TYPES ── */
+.types-section { border-bottom: 1.5px solid var(--ink); }
+
+.types-list {
+  margin-top: 3rem;
+  border-top: 1.5px solid var(--ink);
+}
+
+.type-row {
+  display: grid;
+  grid-template-columns: 80px 260px 1fr 180px;
+  align-items: start;
+  border-bottom: 1px solid var(--paper);
+  transition: background 0.2s;
+  padding: 0;
+}
+.type-row:hover { background: var(--paper); }
+.type-row:last-child { border-bottom: 1.5px solid var(--ink); }
+
+.type-index {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--sand);
+  padding: 2rem 1.5rem 2rem 4rem;
+  border-right: 1px solid var(--paper);
+}
+.type-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ink);
+  padding: 2rem 2rem;
+  border-right: 1px solid var(--paper);
+  line-height: 1.3;
+}
+.type-desc {
+  font-size: 0.9rem;
+  color: var(--ink-mid);
+  padding: 2rem 2.5rem;
+  border-right: 1px solid var(--paper);
+  line-height: 1.7;
+}
+.type-speed {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+  padding: 2rem 2.5rem;
+  align-self: center;
+}
+
+/* ── FAMOUS TWO-UP ── */
+.famous-section { border-bottom: 1.5px solid var(--ink); }
+
+.famous-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1.5px solid var(--ink);
+  margin-top: 3rem;
+}
+
+.famous-card {
+  padding: 3rem;
+  border-right: 1.5px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+  transition: background 0.25s;
+}
+.famous-card:nth-child(2n) { border-right: none; }
+.famous-card:hover { background: var(--paper); }
+
+.fc-route {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0.7rem;
+}
+.fc-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 0.8rem;
+}
+.fc-body {
+  font-size: 0.9rem;
+  color: var(--ink-mid);
+  line-height: 1.75;
+}
+.fc-tag {
+  display: inline-block;
+  margin-top: 1.2rem;
+  background: var(--teal-bg);
+  color: var(--teal);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+}
+
+/* ── ESSAY BLOCK ── */
+.essay-section {
+  display: grid;
+  grid-template-columns: 1fr 560px;
+  border-bottom: 1.5px solid var(--ink);
+}
+.essay-left {
+  border-right: 1.5px solid var(--ink);
+  padding: 5rem 4rem;
+  display: flex;
+  align-items: flex-start;
+}
+.essay-pullquote {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--brick);
+  line-height: 1.4;
+}
+.essay-right {
+  padding: 5rem 4rem;
+  background: var(--paper);
+}
+.essay-right p {
+  font-size: 1rem;
+  color: var(--ink-mid);
+  line-height: 1.8;
+  margin-bottom: 1.2rem;
+}
+.essay-right p:last-child { margin-bottom: 0; }
+
+/* ── FOOTER ── */
+footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 4rem;
+  gap: 3rem;
+  border-top: 1.5px solid var(--ink);
+}
+.footer-col-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+footer p, footer li {
+  font-size: 0.85rem;
+  color: var(--ink-low);
+  line-height: 1.7;
+  list-style: none;
+}
+footer a { color: var(--teal); text-decoration: none; }
+.footer-bottom {
+  grid-column: 1 / -1;
+  padding-top: 2rem;
+  border-top: 1px solid var(--sand);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-bottom span {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--sand);
+  text-transform: uppercase;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  header { padding: 1.5rem 2rem; flex-wrap: wrap; gap: 1rem; }
+  nav { display: none; }
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero-right { min-height: 320px; }
+  .hero-left { padding: 3rem 2rem; }
+  .intro-band { grid-template-columns: 1fr; }
+  .intro-band > * { border-right: none; border-bottom: 1.5px solid var(--ink); padding: 2.5rem 2rem; }
+  .band-label { writing-mode: horizontal-tb; transform: none; align-self: auto; padding: 2.5rem 2rem 0; }
+  .stat-row { grid-template-columns: 1fr 1fr; }
+  .stat-cell:nth-child(2n) { border-right: none; }
+  .stat-cell:nth-child(n+3) { border-top: 1.5px solid var(--ink); }
+  .section-head { padding: 3rem 2rem 0; }
+  .history-grid { grid-template-columns: 1fr; }
+  .history-item { border-right: none !important; }
+  .type-row { grid-template-columns: 1fr; }
+  .type-index, .type-name, .type-desc, .type-speed { border-right: none; padding: 1rem 2rem; }
+  .type-index { padding-top: 2rem; }
+  .type-speed { padding-bottom: 2rem; }
+  .famous-grid { grid-template-columns: 1fr; }
+  .famous-card { border-right: none !important; }
+  .essay-section { grid-template-columns: 1fr; }
+  .essay-left { border-right: none; border-bottom: 1.5px solid var(--ink); padding: 3rem 2rem; }
+  .essay-right { padding: 3rem 2rem; }
+  footer { grid-template-columns: 1fr; padding: 3rem 2rem; }
+}
+</style>
 </head>
 <body>
 
-  <!-- ── NAVIGATION ── -->
+<header>
+  <a href="#" class="wordmark">Trains — A Field Guide</a>
   <nav>
-    <a href="#hero" class="nav-logo">S. Caldirola</a>
-    <ul class="nav-links">
-      <li><a href="#profile">Profile</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#education">Education</a></li>
-    </ul>
+    <a href="#history">History</a>
+    <a href="#types">Types</a>
+    <a href="#famous">Journeys</a>
+    <a href="#essay">Why it Matters</a>
   </nav>
+</header>
 
-  <!-- ── HERO ── -->
-  <section id="hero">
-    <canvas id="hero-canvas"></canvas>
-    <div class="hero-eyebrow">Quantitative Analyst · Risk Specialist · PhD Physics</div>
-    <h1 class="hero-name">Stefano<br /><em>Caldirola</em></h1>
-    <p class="hero-tagline">
-      Bridging deep quantitative expertise with hands-on technical fluency
-      <span style="color:var(--gold);margin:0 0.4em;">·</span>
-      credit risk specialist with experience in modelling, coding and turning complex financial problems into rigorous, actionable solutions
-      <span style="color:var(--gold);margin:0 0.4em;">·</span>
-      communicating them through clear data visualisation and storytelling.
-    </p>
-    <div class="hero-meta">
-      <a href="https://www.linkedin.com/in/stefano-caldirola/" target="_blank" rel="noopener" class="hero-contact">
-        <span>in</span> linkedin.com/in/stefano-caldirola
-      </a>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div>
+      <p class="hero-overline">Iron · Steam · Speed · Silence</p>
+      <h1 class="hero-title">Two<br>hun<span class="italic">dred</span><br>years<br>of rail</h1>
     </div>
-    <div class="hero-scroll">scroll</div>
-    <div class="hero-divider"></div>
-  </section>
-
-  <!-- ── PROFILE ── -->
-  <section id="profile">
-    <div class="section-label">01 — Professional Profile</div>
-    <h2 class="section-title">Quantitative expertise,<br /><em style="font-family:var(--serif);font-style:italic;">end to end</em></h2>
-    <div class="profile-grid">
-      <div class="profile-text">
-        <p>
-          The <em style="color:var(--gold)">fil rouge</em> connecting my career is <strong>Financial Risk</strong> —
-          spanning all processes needed to design, develop and evaluate effective credit strategies.
-          My competitive edge lies in the synergy between a <strong>rigorous quantitative background</strong>
-          (PhD in Experimental Physics) and advanced coding proficiency.
-          I also bring a strong focus on <strong>data presentation</strong> and clear communication — translating 
-          model outputs and risk metrics into clear dashboards and reports that make complexity accessible.
-        </p>
-        <br />
-        <p style="color:var(--text-mute);font-size:.9rem;">
-          Italian · Fluent English (C1) · Daily international working environment
-        </p>
-      </div>
-      <div class="profile-stats">
-        <div class="stat-card">
-          <div class="stat-number">10+</div>
-          <div class="stat-label">Years in Finance &amp; Risk in Major Banking Groups</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">PhD</div>
-          <div class="stat-label">Experimental Physics</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">8+</div>
-          <div class="stat-label">Programming Languages &amp; Technical Tools</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">360°</div>
-          <div class="stat-label">From Model Design to Production Delivery</div>
-        </div>
-      </div>
+    <div class="hero-bottom">
+      <p class="hero-byline">From Trevithick's fire-breathing machine in a Welsh colliery to a levitating capsule crossing the Yangtze delta at 430 km/h — the story of the train is the story of modernity itself.</p>
+      <div class="hero-year">1804</div>
     </div>
-  </section>
+  </div>
 
-  <!-- ── EXPERIENCE ── -->
-  <section id="experience">
-    <div class="section-label">02 — Work Experience</div>
-    <h2 class="section-title">Career<br /><em style="font-family:var(--serif);font-style:italic;">timeline</em></h2>
-    <div class="timeline">
+  <div class="hero-right">
+    <!-- SVG locomotive illustration — geometric, flat, petrol palette -->
+    <svg viewBox="0 0 340 420" width="320" style="position:relative;z-index:1">
+      <!-- Track -->
+      <rect x="0" y="388" width="340" height="4" fill="rgba(255,255,255,0.15)"/>
+      <rect x="0" y="394" width="340" height="4" fill="rgba(255,255,255,0.15)"/>
+      <line x1="30" y1="388" x2="30" y2="398" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+      <line x1="70" y1="388" x2="70" y2="398" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+      <line x1="110" y1="388" x2="110" y2="398" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+      <line x1="150" y1="388" x2="150" y2="398" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+      <line x1="190" y1="388" x2="190" y2="398" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+      <line x1="230" y1="388" x2="230" y2="398" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+      <line x1="270" y1="388" x2="270" y2="398" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+      <line x1="310" y1="388" x2="310" y2="398" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
 
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-period">04/2023 — Present</div>
-        <div class="tl-role">Quantitative Analyst</div>
-        <div class="tl-company">UniCredit · Group Risk Management</div>
-        <div class="tl-desc">
-          Risk Models Specialist for the Credit Risk Modelling team — designing and developing credit
-          risk models for Pillar I risks (Credit Risk, IFRS9, Stress Testing) and maintaining the
-          related architectural framework.
-        </div>
-        <ul class="tl-bullets">
-          <li>IFRS9 model development &amp; integration; LLP simulations and impact analyses</li>
-          <li>Governance, monitoring and Data Quality of the IFRS9 calculation process</li>
-          <li>Support to Group Legal Entities on Group Wide models</li>
-        </ul>
-      </div>
+      <!-- Locomotive body — geometric block -->
+      <rect x="30" y="290" width="240" height="90" rx="2" fill="rgba(255,255,255,0.08)"/>
+      <rect x="30" y="290" width="240" height="90" rx="2" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
 
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-period">04/2021 — 04/2023</div>
-        <div class="tl-role">Solution Architect</div>
-        <div class="tl-company">UniCredit Services · Credit Risk &amp; Lending Office ICT</div>
-        <div class="tl-desc">
-          Providing and evolving calculation engines for credit risk parameters and solutions
-          for UniCredit's digital channels within the Credit Risk &amp; Lending Office product line.
-        </div>
-        <ul class="tl-bullets">
-          <li>Full IT Project LifeCycle ownership from kickoff to production go-live</li>
-          <li>Design and delivery of high-performance scalable applications in complex environments</li>
-        </ul>
-      </div>
+      <!-- Cab -->
+      <rect x="200" y="248" width="70" height="42" rx="2" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+      <!-- Cab windows -->
+      <rect x="208" y="255" width="22" height="18" rx="1" fill="rgba(29,107,114,0.8)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <rect x="234" y="255" width="22" height="18" rx="1" fill="rgba(29,107,114,0.8)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
 
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-period">04/2020 — 04/2021</div>
-        <div class="tl-role">Risk Manager</div>
-        <div class="tl-company">Société Générale Equipment Finance · Risk Management</div>
-        <div class="tl-desc">
-          Risk Manager for the Italian Legal Entities: SG Equipment Finance, SG Factoring,
-          SG Leasing, Fraer Leasing.
-        </div>
-        <ul class="tl-bullets">
-          <li>Data analysis and reporting for internal and group risk committees</li>
-          <li>Regulatory framework compliance, internal and external control structures</li>
-          <li>KRI assessment &amp; identification, ICAAP package preparation</li>
-        </ul>
-      </div>
+      <!-- Boiler -->
+      <rect x="50" y="265" width="155" height="55" rx="4" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+      <!-- Boiler band rings -->
+      <line x1="100" y1="265" x2="100" y2="320" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+      <line x1="145" y1="265" x2="145" y2="320" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+      <line x1="190" y1="265" x2="190" y2="320" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
 
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-period">11/2018 — 03/2020</div>
-        <div class="tl-role">Quantitative Analyst</div>
-        <div class="tl-company">UniCredit · Group Risk Management</div>
-        <div class="tl-desc">
-          Quantitative Analyst for the CPM and EC Models team — design, development and governance
-          of portfolio credit risk models across the entire UniCredit Group.
-        </div>
-        <ul class="tl-bullets">
-          <li>Portfolio model development, internal audit and ECB deep-dive engagement</li>
-          <li>Internal reporting, target definition and ad-hoc analyses for GRM area</li>
-          <li>Steering ICT projects related to Credit Portfolio Models</li>
-        </ul>
-      </div>
+      <!-- Smokestack -->
+      <rect x="72" y="222" width="22" height="45" rx="1" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+      <rect x="65" y="215" width="36" height="12" rx="1" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
 
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-period">12/2015 — 10/2018</div>
-        <div class="tl-role">Application Manager</div>
-        <div class="tl-company">UniCredit Business Integrated Solutions · Credit Risk ICT</div>
-        <div class="tl-desc">
-          Responsible for ICT solutions supporting centralized calculation and monitoring of
-          key Credit Risk indicators in line with local and international regulations.
-        </div>
-        <ul class="tl-bullets">
-          <li>High-performance scalable application design for the Risk Management area</li>
-          <li>IT Project LifeCycle management as interface between business and dev teams</li>
-        </ul>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-dot" style="background:rgba(201,168,76,0.4);box-shadow:none;"></div>
-        <div class="tl-period">09/2014 — 09/2015</div>
-        <div class="tl-role">Assistant Professor</div>
-        <div class="tl-company">Università degli Studi di Milano-Bicocca</div>
-        <div class="tl-desc">
-          Teaching and laboratory assistance for the undergraduate course:
-          <em>Physics Laboratory I</em>.
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ── SKILLS ── -->
-  <section id="skills">
-    <div class="section-label">03 — Skills &amp; Expertise</div>
-    <h2 class="section-title">Technical<br /><em style="font-family:var(--serif);font-style:italic;">toolkit</em></h2>
-    <div class="skills-grid">
-
-      <div class="skill-group">
-        <div class="skill-group-label">Finance &amp; Risk</div>
-        <div class="skill-item">
-          <div class="skill-name"><span>IFRS9 / Credit Risk Models</span></div>
-          <div class="skill-bar"><div class="skill-fill" data-width="96"></div></div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-name"><span>IRB / Pillar II Models</span></div>
-          <div class="skill-bar"><div class="skill-fill" data-width="94"></div></div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-name"><span>Stress Testing</span></div>
-          <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-name"><span>Monte Carlo Methods</span></div>
-          <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
-        </div>
-      </div>
-
-      <div class="skill-group">
-        <div class="skill-group-label">Programming Languages</div>
-        <div class="skill-item">
-          <div class="skill-name"><span>SAS / Python</span></div>
-          <div class="skill-bar"><div class="skill-fill" data-width="92"></div></div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-name"><span>R / Power BI</span></div>
-          <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-name"><span>Java / C++</span></div>
-          <div class="skill-bar"><div class="skill-fill" data-width="82"></div></div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-name"><span>SQL</span></div>
-          <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
-        </div>
-      </div>
-
-      <div class="skill-group">
-        <div class="skill-group-label">Strengths &amp; Soft Skills</div>
-        <div class="skill-item">
-          <div class="skill-name"><span>Model Dev — prototype to production</span></div>
-          <div class="skill-bar"><div class="skill-fill" data-width="93"></div></div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-name"><span>Analytical Thinking &amp; Problem Solving</span></div>
-          <div class="skill-bar"><div class="skill-fill" data-width="96"></div></div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-name"><span>Regulatory Compliance (Audit · GIV · ECB)</span></div>
-          <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
-        </div>
-        <div class="skill-item">
-          <div class="skill-name"><span>Effective Communication &amp; Data Presentation</span></div>
-          <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ── EDUCATION ── -->
-  <section id="education">
-    <div class="section-label">04 — Education</div>
-    <h2 class="section-title">Academic<br /><em style="font-family:var(--serif);font-style:italic;">foundations</em></h2>
-    <div class="edu-grid">
-      <div class="edu-card">
-        <div class="edu-degree">Doctor of Philosophy</div>
-        <div class="edu-field">Experimental Physics · Research &amp; Data Analysis</div>
-        <div class="edu-uni">Università degli Studi di Milano-Bicocca</div>
-        <div class="edu-years">2012 — 2015</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-degree">Master's Degree</div>
-        <div class="edu-field">Physics · Plasma &amp; Solid State Physics</div>
-        <div class="edu-uni">Università degli Studi di Milano-Bicocca</div>
-        <div class="edu-years">2010 — 2012</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-degree">Bachelor's Degree</div>
-        <div class="edu-field">Physics · Mathematics &amp; Statistics</div>
-        <div class="edu-uni">Università degli Studi di Milano-Bicocca</div>
-        <div class="edu-years">2007 — 2010</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── FOOTER ── -->
-  <footer>
-    <div class="footer-sig">Stefano <em>Caldirola</em> &mdash; 2026</div>
-    <div class="footer-mono"><a href="https://www.linkedin.com/in/stefano-caldirola/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">linkedin.com/in/stefano-caldirola</a></div>
-  </footer>
-
-  <!-- ── SCRIPTS ── -->
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    // ── Hero canvas: animated grid lines ──
-    const canvas = document.getElementById('hero-canvas');
-    const ctx = canvas.getContext('2d');
-    let t = 0;
-
-    function resize() {
-      canvas.width  = canvas.parentElement.offsetWidth;
-      canvas.height = canvas.parentElement.offsetHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    function drawGrid() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const spacing = 60;
-      const cols = Math.ceil(canvas.width  / spacing) + 1;
-      const rows = Math.ceil(canvas.height / spacing) + 1;
-
-      for (let i = 0; i < cols; i++) {
-        const x = i * spacing;
-        const wave = Math.sin(t * 0.6 + i * 0.3) * 3;
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x + wave, canvas.height);
-        ctx.strokeStyle = `rgba(201,168,76,${0.04 + Math.sin(t*0.4 + i*0.5)*0.015})`;
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-      }
-      for (let j = 0; j < rows; j++) {
-        const y = j * spacing;
-        const wave = Math.sin(t * 0.5 + j * 0.25) * 3;
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y + wave);
-        ctx.strokeStyle = `rgba(201,168,76,${0.03 + Math.cos(t*0.3 + j*0.4)*0.012})`;
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-      }
-
-      // Floating dots at intersections
-      for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-          if ((i + j) % 4 !== 0) continue;
-          const glow = (Math.sin(t * 0.8 + i * 0.7 + j * 0.5) + 1) / 2;
-          ctx.beginPath();
-          ctx.arc(i * spacing, j * spacing, 1.2, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(201,168,76,${0.05 + glow * 0.18})`;
-          ctx.fill();
+      <!-- Steam puffs — CSS animated -->
+      <style>
+        .sp { animation: sp 2.8s ease-out infinite; transform-origin: 83px 215px; }
+        .sp:nth-child(2) { animation-delay: 0.9s; }
+        .sp:nth-child(3) { animation-delay: 1.8s; }
+        @keyframes sp {
+          0%   { transform: translateY(0) scale(0.8); opacity: 0.5; }
+          100% { transform: translateY(-70px) scale(2); opacity: 0; }
         }
-      }
+      </style>
+      <g>
+        <ellipse class="sp" cx="83" cy="210" rx="14" ry="10" fill="rgba(255,255,255,0.18)"/>
+        <ellipse class="sp" cx="83" cy="210" rx="10" ry="8" fill="rgba(255,255,255,0.15)" style="animation-delay:0.9s"/>
+        <ellipse class="sp" cx="83" cy="210" rx="8" ry="6" fill="rgba(255,255,255,0.12)" style="animation-delay:1.8s"/>
+      </g>
 
-      t += 0.012;
-      requestAnimationFrame(drawGrid);
-    }
-    drawGrid();
+      <!-- Dome -->
+      <ellipse cx="160" cy="266" rx="18" ry="13" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+      <!-- Valve on dome -->
+      <rect x="155" y="252" width="10" height="15" rx="2" fill="rgba(184,61,34,0.9)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
 
-    // ── Intersection Observer: timeline items ──
-    const tlItems = document.querySelectorAll('.tl-item');
-    // Only animate if IntersectionObserver is supported and items are off-screen
-    if ('IntersectionObserver' in window) {
-      tlItems.forEach(el => el.classList.add('animate-in'));
-      const tlObserver = new IntersectionObserver((entries) => {
-        entries.forEach((e, i) => {
-          if (e.isIntersecting) {
-            setTimeout(() => e.target.classList.add('visible'), i * 80);
-            tlObserver.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.05 });
-      tlItems.forEach(el => tlObserver.observe(el));
-    }
+      <!-- Headlamp -->
+      <rect x="30" y="295" width="24" height="18" rx="2" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+      <circle cx="42" cy="304" r="7" fill="rgba(255,255,255,0.35)"/>
+      <circle cx="42" cy="304" r="4" fill="rgba(255,255,255,0.7)"/>
+      <!-- Lamp glow -->
+      <ellipse cx="20" cy="304" rx="16" ry="8" fill="rgba(255,255,255,0.07)"/>
 
-    // ── Intersection Observer:
+      <!-- Pilot/cowcatcher -->
+      <polygon points="30,330 16,340 12,380 30,380" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+      <line x1="12" y1="350" x2="30" y2="340" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+      <line x1="12" y1="360" x2="30" y2="348" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+      <line x1="12" y1="370" x2="30" y2="356" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+
+      <!-- Running board -->
+      <rect x="18" y="375" width="252" height="8" rx="1" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+
+      <!-- Wheels — spinning via CSS -->
+      <style>
+        .wr { animation: wspin 1.4s linear infinite; }
+        .ws { animation: wspin 2.1s linear infinite; }
+        @keyframes wspin { to { transform: rotate(360deg); } }
+      </style>
+
+      <!-- Large drive wheels -->
+      <g transform="translate(90,385)">
+        <circle r="24" fill="rgba(29,107,114,0.5)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+        <g class="wr" style="transform-origin:90px 385px; transform-box:fill-box; transform-origin:center;">
+          <line x1="-20" y1="0" x2="20" y2="0" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+          <line x1="0" y1="-20" x2="0" y2="20" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+          <line x1="-14" y1="-14" x2="14" y2="14" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <line x1="14" y1="-14" x2="-14" y2="14" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        </g>
+        <circle r="5" fill="rgba(184,61,34,0.9)"/>
+      </g>
+
+      <g transform="translate(150,385)">
+        <circle r="24" fill="rgba(29,107,114,0.5)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+        <g class="wr" style="transform-origin:150px 385px; transform-box:fill-box; transform-origin:center;">
+          <line x1="-20" y1="0" x2="20" y2="0" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+          <line x1="0" y1="-20" x2="0" y2="20" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+          <line x1="-14" y1="-14" x2="14" y2="14" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <line x1="14" y1="-14" x2="-14" y2="14" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        </g>
+        <circle r="5" fill="rgba(184,61,34,0.9)"/>
+      </g>
+
+      <g transform="translate(210,385)">
+        <circle r="24" fill="rgba(29,107,114,0.5)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+        <g class="wr" style="transform-origin:210px 385px; transform-box:fill-box; transform-origin:center;">
+          <line x1="-20" y1="0" x2="20" y2="0" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+          <line x1="0" y1="-20" x2="0" y2="20" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+          <line x1="-14" y1="-14" x2="14" y2="14" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <line x1="14" y1="-14" x2="-14" y2="14" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        </g>
+        <circle r="5" fill="rgba(184,61,34,0.9)"/>
+      </g>
+
+      <!-- Small front wheel -->
+      <g transform="translate(48,385)">
+        <circle r="16" fill="rgba(29,107,114,0.4)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+        <g class="ws" style="transform-box:fill-box; transform-origin:center;">
+          <line x1="-13" y1="0" x2="13" y2="0" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+          <line x1="0" y1="-13" x2="0" y2="13" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+        </g>
+        <circle r="3.5" fill="rgba(184,61,34,0.8)"/>
+      </g>
+
+      <!-- Connecting rod -->
+      <rect x="48" y="378" width="165" height="5" rx="2.5" fill="rgba(255,255,255,0.18)"/>
+
+      <!-- Tender -->
+      <rect x="248" y="300" width="78" height="80" rx="2" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+      <!-- Coal lumps -->
+      <ellipse cx="268" cy="308" rx="10" ry="5" fill="rgba(255,255,255,0.1)"/>
+      <ellipse cx="290" cy="305" rx="9" ry="4" fill="rgba(255,255,255,0.08)"/>
+      <ellipse cx="310" cy="309" rx="8" ry="4" fill="rgba(255,255,255,0.07)"/>
+      <!-- Tender wheels -->
+      <g transform="translate(272,385)">
+        <circle r="16" fill="rgba(29,107,114,0.4)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+        <g class="ws" style="transform-box:fill-box; transform-origin:center;">
+          <line x1="-13" y1="0" x2="13" y2="0" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          <line x1="0" y1="-13" x2="0" y2="13" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+        </g>
+        <circle r="3" fill="rgba(184,61,34,0.7)"/>
+      </g>
+      <g transform="translate(312,385)">
+        <circle r="16" fill="rgba(29,107,114,0.4)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+        <g class="ws" style="transform-box:fill-box; transform-origin:center;">
+          <line x1="-13" y1="0" x2="13" y2="0" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          <line x1="0" y1="-13" x2="0" y2="13" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+        </g>
+        <circle r="3" fill="rgba(184,61,34,0.7)"/>
+      </g>
+    </svg>
+  </div>
+</div>
+
+<!-- INTRO BAND -->
+<div class="intro-band">
+  <div class="band-label">Introduction</div>
+  <div class="band-text">
+    <p>In February 1804, a Welsh mining engineer named <strong>Richard Trevithick</strong> lit the furnace of a machine nobody quite believed would move. It did — hauling ten tonnes of iron and seventy onlookers five miles through the Merthyr Tydfil colliery.</p>
+    <p style="margin-top:1rem">The world had not yet noticed. Within a generation, it could think of nothing else.</p>
+  </div>
+  <div class="band-text">
+    <p>Railways compressed geography, dissolved isolation, and yanked the entire northern hemisphere into industrial modernity. A journey that took a week by carriage took hours by train. Empires were built along rail lines. Cities grew or died by whether the tracks came through.</p>
+    <p style="margin-top:1rem">Two centuries on, the train remains the most civilised way to move between places — and perhaps the most necessary.</p>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stat-row">
+  <div class="stat-cell">
+    <div class="stat-n">574<span>km/h</span></div>
+    <div class="stat-dim">Speed record</div>
+    <div class="stat-desc">TGV v150, France, 2007</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-n">1.3M<span>km</span></div>
+    <div class="stat-dim">Global track</div>
+    <div class="stat-desc">Combined rail network worldwide</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-n">9B</div>
+    <div class="stat-dim">Trips per year</div>
+    <div class="stat-desc">Annual passenger journeys globally</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-n">603<span>km/h</span></div>
+    <div class="stat-dim">Maglev record</div>
+    <div class="stat-desc">SCMaglev L0, Japan, 2015</div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<section class="history-section" id="history">
+  <div class="section-head">
+    <span class="section-number">01</span>
+    <h2 class="section-title">A brief history of the<br><em>iron road</em></h2>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="history-grid">
+    <div class="history-item">
+      <div class="hist-year">1804</div>
+      <div class="hist-title">Trevithick's Locomotive</div>
+      <p class="hist-body">The first full-scale steam locomotive runs at Merthyr Tydfil, Wales. Nobody calls it historic yet. Everyone calls it extremely loud.</p>
+    </div>
+    <div class="history-item">
+      <div class="hist-year">1829</div>
+      <div class="hist-title">Stephenson's Rocket</div>
+      <p class="hist-body">The Rainhill Trials prove steam traction commercially viable. Rocket wins at 47 km/h. The age of railways — the age of speed — has arrived.</p>
+    </div>
+    <div class="history-item">
+      <div class="hist-year">1830</div>
+      <div class="hist-title">First Passenger Railway</div>
+      <p class="hist-body">The Liverpool and Manchester Railway opens — the world's first inter-city passenger line with a fixed timetable, steam haulage throughout, and actual ticket offices.</p>
+    </div>
+    <div class="history-item">
+      <div class="hist-year">1869</div>
+      <div class="hist-title">Transcontinental Railroad</div>
+      <p class="hist-body">The golden spike at Promontory, Utah. The American continent is sewn together. It took six years, tens of thousands of labourers, and one very famous photograph.</p>
+    </div>
+    <div class="history-item">
+      <div class="hist-year">1883</div>
+      <div class="hist-title">Orient Express</div>
+      <p class="hist-body">Paris to Istanbul in four days. Mahogany panelling, six-course dinners, silver candlesticks. The Orient Express invents luxury rail travel and glamorises it for a century.</p>
+    </div>
+    <div class="history-item">
+      <div class="hist-year">1938</div>
+      <div class="hist-title">Mallard's Record</div>
+      <p class="hist-body">LNER Class A4 No.4468 <em>Mallard</em> reaches 202.8 km/h on the East Coast Main Line. The absolute world steam speed record. It has never been broken.</p>
+    </div>
+    <div class="history-item">
+      <div class="hist-year">1964</div>
+      <div class="hist-title">Shinkansen</div>
+      <p class="hist-body">Japan opens the Tōkaidō Shinkansen for the Tokyo Olympics at 210 km/h. In 60 years of service, carrying over ten billion passengers: zero fatalities.</p>
+    </div>
+    <div class="history-item">
+      <div class="hist-year">2003</div>
+      <div class="hist-title">Maglev Goes Commercial</div>
+      <p class="hist-body">Shanghai Transrapid opens between Pudong Airport and the city. Thirty kilometres in seven minutes. The train floats on invisible magnetic fields. No wheels touch the rail.</p>
+    </div>
+    <div class="history-item">
+      <div class="hist-year">Today</div>
+      <div class="hist-title">Hydrogen &amp; Beyond</div>
+      <p class="hist-body">Alstom's Coradia iLint emits only steam. Hyperloop pods promise 1,000 km/h in vacuum tubes. The railway, two centuries old, keeps reinventing itself entirely.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TYPES -->
+<section class="types-section" id="types">
+  <div class="section-head">
+    <span class="section-number">02</span>
+    <h2 class="section-title">Six kinds of train</h2>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="types-list">
+    <div class="type-row">
+      <div class="type-index">01</div>
+      <div class="type-name">Steam<br>Locomotive</div>
+      <div class="type-desc">Coal or wood heats water; steam drives pistons through a hypnotic choreography of rods and cranks. Still active on heritage railways across the UK, India, Zimbabwe, and beyond.</div>
+      <div class="type-speed">Up to 202 km/h<br>(Mallard, 1938)</div>
+    </div>
+    <div class="type-row">
+      <div class="type-index">02</div>
+      <div class="type-name">High-Speed<br>Rail</div>
+      <div class="type-desc">The Shinkansen, TGV, ICE, AVE, CRH. These aerodynamic trains have made flying irrelevant for journeys under 600 km across Japan, France, Germany, Spain, and China.</div>
+      <div class="type-speed">320 – 380 km/h<br>in service</div>
+    </div>
+    <div class="type-row">
+      <div class="type-index">03</div>
+      <div class="type-name">Maglev</div>
+      <div class="type-desc">Levitating on electromagnetic fields, no wheel touches rail. Friction is almost entirely eliminated. Silent, maintenance-light, extraordinarily fast — and not yet widely adopted.</div>
+      <div class="type-speed">603 km/h record<br>SCMaglev L0</div>
+    </div>
+    <div class="type-row">
+      <div class="type-index">04</div>
+      <div class="type-name">Metro<br>&amp; Subway</div>
+      <div class="type-desc">The circulatory system of great cities. From London's 1863 Metropolitan Line to the driverless Copenhagen Metro — urban rail moves tens of millions invisibly, without fuss.</div>
+      <div class="type-speed">70 – 100 km/h<br>typical</div>
+    </div>
+    <div class="type-row">
+      <div class="type-index">05</div>
+      <div class="type-name">Heavy<br>Freight</div>
+      <div class="type-desc">The unsung giants. Australian iron-ore trains stretching nearly 2 km. The backbone of global commodity supply chains — carrying coal, grain, automobiles, and containers silently overland.</div>
+      <div class="type-speed">Up to 100,000 t<br>per consist</div>
+    </div>
+    <div class="type-row">
+      <div class="type-index">06</div>
+      <div class="type-name">Hydrogen<br>&amp; Electric</div>
+      <div class="type-desc">Alstom's Coradia iLint entered commercial service in Germany in 2018 — the world's first hydrogen-powered passenger train, emitting only water vapour and warmth. The future arrived quietly.</div>
+      <div class="type-speed">Zero emissions<br>operational now</div>
+    </div>
+  </div>
+</section>
+
+<!-- FAMOUS -->
+<section class="famous-section" id="famous">
+  <div class="section-head">
+    <span class="section-number">03</span>
+    <h2 class="section-title">Six journeys worth<br>taking your time over</h2>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="famous-grid">
+    <div class="famous-card">
+      <div class="fc-route">Paris — Istanbul</div>
+      <div class="fc-name">The Orient Express</div>
+      <p class="fc-body">Inaugurated in 1883, this service became synonymous with luxury, espionage, and a particular brand of European mystery. Agatha Christie set her most famous novel aboard it; the real train surpassed even that glamour.</p>
+      <span class="fc-tag">Since 1883</span>
+    </div>
+
+    <div class="famous-card">
+      <div class="fc-route">London — Edinburgh</div>
+      <div class="fc-name">LNER Mallard</div>
+      <p class="fc-body">On 3 July 1938, Mallard hauled a dynamometer test run to 202.8 km/h. The world steam speed record, set in eight minutes of controlled terror near Grantham. It has never been challenged.</p>
+      <span class="fc-tag">202.8 km/h — 1938</span>
+    </div>
+
+    <div class="famous-card">
+      <div class="fc-route">Tokyo — Osaka</div>
+      <div class="fc-name">Tōkaidō Shinkansen</div>
+      <p class="fc-body">The world's busiest high-speed line has run since 1964 with zero passenger fatalities. Over ten billion journeys. It departs within thirty seconds of schedule. On average. Every day.</p>
+      <span class="fc-tag">Since 1964 · 10B+ journeys</span>
+    </div>
+
+    <div class="famous-card">
+      <div class="fc-route">Moscow — Vladivostok</div>
+      <div class="fc-name">Trans-Siberian Railway</div>
+      <p class="fc-body">Nine thousand two hundred and eighty-nine kilometres. Eight time zones. Seven days. Taiga, tundra, the vast grey mirror of Lake Baikal glimpsed through a cold morning window. Still the greatest overland journey on earth.</p>
+      <span class="fc-tag">9,289 km</span>
+    </div>
+
+    <div class="famous-card">
+      <div class="fc-route">Cusco — Machu Picchu</div>
+      <div class="fc-name">Hiram Bingham</div>
+      <p class="fc-body">Threading the Sacred Valley of the Incas at altitude, through cloud forest and along the churning Urubamba river, to arrive at one of the ancient world's most dramatic surviving sites. The journey earns the destination.</p>
+      <span class="fc-tag">Andean highlands</span>
+    </div>
+
+    <div class="famous-card">
+      <div class="fc-route">Cape Town — Pretoria</div>
+      <div class="fc-name">Pride of Africa</div>
+      <p class="fc-body">Widely considered the most luxurious train on the planet — a rolling Edwardian hotel. Antique brass, en-suite showers, open observation decks, the sound of the African night pressing in from every side.</p>
+      <span class="fc-tag">Rovos Rail</span>
+    </div>
+  </div>
+</section>
+
+<!-- ESSAY -->
+<section class="essay-section" id="essay">
+  <div class="essay-left">
+    <p class="essay-pullquote">"Railways have rendered more services and done more good than almost any other institution in the world."<br><br>— Robert Stephenson, 1850</p>
+  </div>
+  <div class="essay-right">
+    <p>The train occupies a peculiar position in human feeling — it is simultaneously nostalgic and progressive, industrial and ecological, public and intimate. No other form of travel places you so precisely in the landscape: not above it, not sealed from it, but moving through it at the speed at which it can be understood.</p>
+    <p>That quality is not incidental. The railway was always the democratic transport — long before the motorway, long before the budget airline, the train connected ordinary people to cities, to work, to each other. For much of the nineteenth century, it was the only way for a working person to move more than twenty miles in a day.</p>
+    <p>In the decades ahead, as aviation faces its carbon reckoning, the railway stands to reclaim the central role it held before the automobile arrived to dislodge it. High-speed lines are extending. Hydrogen trains are running. Night trains are returning to routes abandoned in the 1990s. The iron road turns out to be very long indeed.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-col-title">The Field Guide</div>
+    <p>A typographic tribute to 220 years of rail, from the Welsh valleys to the Yangtze delta.</p>
+  </div>
+  <div>
+    <div class="footer-col-title">Sections</div>
+    <ul>
+      <li><a href="#history">History</a></li>
+      <li><a href="#types">Types of Train</a></li>
+      <li><a href="#famous">Famous Journeys</a></li>
+      <li><a href="#essay">Why it Matters</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-col-title">Key Dates</div>
+    <p>1804 — First steam locomotive<br>
+      1883 — Orient Express opens<br>
+      1938 — Mallard's speed record<br>
+      1964 — Shinkansen inaugurated<br>
+      2003 — Shanghai Maglev opens</p>
+  </div>
+  <div class="footer-bottom">
+    <span>Trains — A Field Guide</span>
+    <span>1804 — Present Day</span>
+  </div>
+</footer>
+
+</body>
+</html>
